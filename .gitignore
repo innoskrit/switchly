@@ -1,0 +1,7 @@
+# Editor and OS files.
+# Build output inside api/ is already covered by api/.gitignore.
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
