@@ -25,4 +25,10 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining("; "));
         return ErrorResponse.of("VALIDATION_FAILED", message);
     }
+
+    @ExceptionHandler(ConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleConflict(ConflictException e) {
+        return ErrorResponse.of("CONFLICT", e.getMessage());
+    }
 }

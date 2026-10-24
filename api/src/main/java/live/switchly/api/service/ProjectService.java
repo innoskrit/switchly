@@ -21,7 +21,7 @@ public class ProjectService {
     }
 
     public Project create(UUID organizationId, String name) {
-        Organization organization = organizationService.getById(organizationId);  // 404 if it doesn't exist
+        Organization organization = organizationService.findById(organizationId);  // 404 if it doesn't exist
         Project project = new Project(UUID.randomUUID(), organization.getId(), name);
         return projectRepository.save(project);
     }
@@ -32,7 +32,7 @@ public class ProjectService {
     }
 
     public List<Project> getAllForOrganization(UUID organizationId) {
-        organizationService.getById(organizationId);  // 404 if it doesn't exist
+        organizationService.findById(organizationId);  // 404 if it doesn't exist
         return projectRepository.findByOrganizationId(organizationId);
     }
 }

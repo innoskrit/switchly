@@ -29,16 +29,16 @@ public class OrganizationController {
     @PostMapping("/orgs")
     @ResponseStatus(HttpStatus.CREATED)
     public Organization create(@Valid @RequestBody CreateOrganizationRequest request) {
-        return organizationService.create(request.name());
+        return organizationService.save(request.name());
     }
 
     @GetMapping("/orgs")
     public List<Organization> getAll() {
-        return organizationService.getAll();
+        return organizationService.findAll();
     }
 
     @GetMapping("/orgs/{orgId}")
     public Organization getById(@PathVariable UUID orgId) {
-        return organizationService.getById(orgId);
+        return organizationService.findById(orgId);
     }
 }

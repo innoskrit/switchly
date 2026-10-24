@@ -17,17 +17,17 @@ public class OrganizationService {
         this.organizationRepository = organizationRepository;
     }
 
-    public Organization create(String name) {
+    public Organization save(String name) {
         Organization organization = new Organization(UUID.randomUUID(), name);
         return organizationRepository.save(organization);
     }
 
-    public Organization getById(UUID id) {
+    public Organization findById(UUID id) {
         return organizationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Organization " + id + " not found"));
     }
 
-    public List<Organization> getAll() {
+    public List<Organization> findAll() {
         return organizationRepository.findAll();
     }
 }
