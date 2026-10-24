@@ -956,6 +956,7 @@ switchly/
 | `Schema validation: missing column [...] in table [...]` | An `@Column(name = "...")` doesn't match the column in your migration. Compare them letter by letter. |
 | `Migration checksum mismatch for migration version 1` | You edited V1 after it ran. Undo your edit exactly. (If you really can't get it back, see the note below.) |
 | `Not a managed type: class live.switchly.api.model.…` | You forgot `@Entity` on that class. |
+| `No property 'remove' found for type 'Flag'` (or another name) | A repository interface still has a method Spring can't turn into SQL — often left over from the session 2 homework. Delete it, and use what `JpaRepository` already has, like `deleteById`. |
 | `variable id might not have been initialized` | A field is still `final`. Remove `final` from the fields of your entities. |
 | The app starts, but a request returns **500**, and the log says `No default constructor for entity` | You forgot the empty `protected …() {}` constructor in that entity. |
 | `cannot find symbol: class Entity` / `package jakarta.persistence does not exist` | The new dependencies aren't loaded. Reload Maven in your editor (Step 3), or run from the terminal with `./mvnw spring-boot:run`. |
