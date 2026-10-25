@@ -8,14 +8,14 @@ Today we fix the forgetting. By the end of this session you'll have a real **Pos
 
 **No Java today.** You won't open the `api` folder at all. Today is just you and the database. In [session 3B](03B-spring-boot-meets-postgres.md), Spring Boot starts writing these rows for you.
 
-| You'll learn to…                                   | Step     |
-| -------------------------------------------------- | -------- |
-| Start a database with Docker                       | 2 – 4    |
-| Talk to the database directly                      | 5        |
-| Design tables from the Java classes you already have | 6 – 7  |
-| Create tables, put rows in, read them back         | 8 – 9    |
-| Watch the database refuse bad data                 | 10       |
-| Prove the data survives a restart                  | 12       |
+| You'll learn to…                                     | Step  |
+| ---------------------------------------------------- | ----- |
+| Start a database with Docker                         | 2 – 4 |
+| Talk to the database directly                        | 5     |
+| Design tables from the Java classes you already have | 6 – 7 |
+| Create tables, put rows in, read them back           | 8 – 9 |
+| Watch the database refuse bad data                   | 10    |
+| Prove the data survives a restart                    | 12    |
 
 ---
 
@@ -25,12 +25,12 @@ In session 2, your data lived in a `Map` inside the running Java program. A runn
 
 A **database** is a program whose whole job is to keep data on **disk**, so it's still there after a restart, a crash, or a power cut. It also lets you ask questions about that data in **SQL** — which you already know.
 
-|                         | `Map` in Java (session 2) | Database (today)     |
-| ----------------------- | ------------------------- | -------------------- |
-| Where the data lives    | RAM                       | Disk                 |
-| After a restart         | Gone                      | Still there          |
-| How you ask questions   | Java code                 | SQL                  |
-| Who checks the rules    | Only your Java code       | Your Java code **and** the database |
+|                       | `Map` in Java (session 2) | Database (today)                    |
+| --------------------- | ------------------------- | ----------------------------------- |
+| Where the data lives  | RAM                       | Disk                                |
+| After a restart       | Gone                      | Still there                         |
+| How you ask questions | Java code                 | SQL                                 |
+| Who checks the rules  | Only your Java code       | Your Java code **and** the database |
 
 We'll use **PostgreSQL** (people say "Postgres"). It's free, it's used by real companies everywhere, and it's what Switchly will run on in production.
 
@@ -44,12 +44,12 @@ We won't install Postgres the normal way. We'll run it inside **Docker**.
 
 You only need four words today:
 
-| Word          | What it means                                                                           | Everyday version                    |
-| ------------- | --------------------------------------------------------------------------------------- | ----------------------------------- |
-| **Image**     | A ready-made package of a program — here, Postgres 17.                                  | The installer you download          |
-| **Container** | A running copy of an image.                                                             | The program, installed and running  |
-| **Port**      | A numbered door on your laptop that lets you reach the program inside the container.    | A door number                       |
-| **Volume**    | A folder Docker keeps on disk for the container. It survives when the container is removed. | An external hard disk           |
+| Word          | What it means                                                                               | Everyday version                   |
+| ------------- | ------------------------------------------------------------------------------------------- | ---------------------------------- |
+| **Image**     | A ready-made package of a program — here, Postgres 17.                                      | The installer you download         |
+| **Container** | A running copy of an image.                                                                 | The program, installed and running |
+| **Port**      | A numbered door on your laptop that lets you reach the program inside the container.        | A door number                      |
+| **Volume**    | A folder Docker keeps on disk for the container. It survives when the container is removed. | An external hard disk              |
 
 That's all the Docker you need today.
 
@@ -111,15 +111,15 @@ volumes:
 
 What each line means:
 
-| Line                                   | Meaning                                                                                       |
-| -------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `services:`                            | The list of programs we want to run. Just one today.                                          |
-| `postgres:`                            | The name we give this service. We'll use it in commands.                                      |
-| `image: postgres:17`                   | Use the official Postgres image, version 17.                                                  |
-| `container_name: switchly-postgres`    | The name you'll see in Docker Desktop.                                                        |
-| `POSTGRES_DB: switchly`                | Create a database called `switchly` the first time it starts.                                 |
-| `POSTGRES_USER` / `POSTGRES_PASSWORD`  | The username and password for that database.                                                 |
-| `"15432:5432"`                         | **Your laptop's** door 15432 leads to **the container's** door 5432. More on this below.      |
+| Line                                        | Meaning                                                                                  |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `services:`                                 | The list of programs we want to run. Just one today.                                     |
+| `postgres:`                                 | The name we give this service. We'll use it in commands.                                 |
+| `image: postgres:17`                        | Use the official Postgres image, version 17.                                             |
+| `container_name: switchly-postgres`         | The name you'll see in Docker Desktop.                                                   |
+| `POSTGRES_DB: switchly`                     | Create a database called `switchly` the first time it starts.                            |
+| `POSTGRES_USER` / `POSTGRES_PASSWORD`       | The username and password for that database.                                             |
+| `"15432:5432"`                              | **Your laptop's** door 15432 leads to **the container's** door 5432. More on this below. |
 | `switchly-db-data:/var/lib/postgresql/data` | Keep Postgres's data folder in a volume called `switchly-db-data`, so it survives.       |
 
 ### Why `15432` and not `5432`?
@@ -213,12 +213,12 @@ That `switchly=#` is the **psql prompt**. From now on, this guide says **"in psq
 
 The psql commands you need:
 
-| Type this     | What it does                                       |
-| ------------- | -------------------------------------------------- |
-| `\dt`         | List all tables                                    |
-| `\d flag`     | Show the columns and rules of the table `flag`     |
-| `\q`          | Quit psql, back to your terminal                   |
-| `Ctrl + C`    | Cancel what you're typing                          |
+| Type this  | What it does                                   |
+| ---------- | ---------------------------------------------- |
+| `\dt`      | List all tables                                |
+| `\d flag`  | Show the columns and rules of the table `flag` |
+| `\q`       | Quit psql, back to your terminal               |
+| `Ctrl + C` | Cancel what you're typing                      |
 
 Commands starting with `\` are psql's own. Everything else is SQL — and **every SQL statement ends with `;`**. If you press Enter and the prompt changes to `switchly-#`, psql is waiting for the `;`. Type `;` and press Enter.
 
@@ -240,17 +240,18 @@ A brand-new, empty database. ("Relation" is Postgres's word for a table.)
 
 Before typing any SQL, decide what the tables look like. Good news: **you already designed them** — in session 2, as Java classes.
 
-| Java (session 2)                                     | Database (today)                                  |
-| ---------------------------------------------------- | ------------------------------------------------- |
-| A class — `Organization`                             | A **table** — `organization`                      |
-| A field — `organizationId`                           | A **column** — `organization_id`                  |
-| One object — `new Organization(...)`                 | One **row**                                       |
-| The whole `Map` in `InMemoryOrganizationRepository`  | The whole table                                   |
-| `UUID`                                               | `UUID`                                            |
-| `String`                                             | `TEXT`                                            |
-| `boolean`                                            | `BOOLEAN`                                         |
+| Java (session 2)                                    | Database (today)                 |
+| --------------------------------------------------- | -------------------------------- |
+| A class — `Organization`                            | A **table** — `organization`     |
+| A field — `organizationId`                          | A **column** — `organization_id` |
+| One object — `new Organization(...)`                | One **row**                      |
+| The whole `Map` in `InMemoryOrganizationRepository` | The whole table                  |
+| `UUID`                                              | `UUID`                           |
+| `String`                                            | `TEXT`                           |
+| `boolean`                                           | `BOOLEAN`                        |
 
 Two naming habits:
+
 - Java uses `camelCase` (`organizationId`); SQL uses `snake_case` (`organization_id`). Same thing, different spelling habits.
 - Table names are **singular**: `flag`, not `flags`. A table is "the flag table", and each row is one flag.
 
@@ -384,6 +385,7 @@ CREATE TABLE flag (
 ```
 
 Two new things:
+
 - `DEFAULT false` — if you don't say whether a new flag is on, it's **off**. Same as session 2: a new flag always starts off. Safe by default.
 - `CONSTRAINT uq_flag_key_per_project UNIQUE (project_id, key)` — the "no duplicate keys in a project" rule. We give the rule a **name** (`uq_flag_key_per_project`) so that when it's broken, the error message tells us exactly which rule. `uq_` is short for "unique".
 
@@ -537,12 +539,12 @@ SELECT key, enabled FROM flag;
 
 Everything your session 2 API did, you just did by hand:
 
-| Session 2 API                         | SQL you just ran                   |
-| ------------------------------------- | ---------------------------------- |
-| `POST /api/v1/orgs`                   | `INSERT INTO organization ...`     |
-| `GET /api/v1/orgs`                    | `SELECT * FROM organization`       |
-| `POST /api/v1/projects/{id}/flags`    | `INSERT INTO flag ...`             |
-| `PUT /api/v1/flags/{id}/state`        | `UPDATE flag SET enabled = ...`    |
+| Session 2 API                      | SQL you just ran                |
+| ---------------------------------- | ------------------------------- |
+| `POST /api/v1/orgs`                | `INSERT INTO organization ...`  |
+| `GET /api/v1/orgs`                 | `SELECT * FROM organization`    |
+| `POST /api/v1/projects/{id}/flags` | `INSERT INTO flag ...`          |
+| `PUT /api/v1/flags/{id}/state`     | `UPDATE flag SET enabled = ...` |
 
 In session 3B, your API will run these same statements for you. That's all a web API on top of a database is: a polite front door to SQL.
 
@@ -593,11 +595,11 @@ DETAIL:  Failing row contains (af0b0eec-ebf4-48b1-b290-55f0fd31222c, null).
 
 ### Side by side
 
-| What you tried            | Session 2 (your Java code)                  | Today (the database)                   |
-| ------------------------- | ------------------------------------------- | -------------------------------------- |
-| Organization doesn't exist | `ProjectService` → **404**                 | Foreign key → `violates foreign key constraint` |
-| Duplicate flag key        | `existsByProjectIdAndKey` → **409**         | Unique → `violates unique constraint`  |
-| Missing name              | `@NotBlank` → **400**                       | `NOT NULL` → `violates not-null constraint` |
+| What you tried             | Session 2 (your Java code)          | Today (the database)                            |
+| -------------------------- | ----------------------------------- | ----------------------------------------------- |
+| Organization doesn't exist | `ProjectService` → **404**          | Foreign key → `violates foreign key constraint` |
+| Duplicate flag key         | `existsByProjectIdAndKey` → **409** | Unique → `violates unique constraint`           |
+| Missing name               | `@NotBlank` → **400**               | `NOT NULL` → `violates not-null constraint`     |
 
 > **One difference worth noticing.** Try an **empty** name:
 >
@@ -719,40 +721,40 @@ switchly/
 
 ## New words
 
-| Word | Meaning |
-| --- | --- |
-| **Database** | A program that keeps data on disk and answers questions about it in SQL. |
-| **PostgreSQL / Postgres** | The database we use. Free, and used everywhere. |
-| **Docker image** | A ready-made package of a program, like an installer. |
-| **Container** | A running copy of an image. |
-| **Port** | A numbered door for reaching a program. `15432:5432` = laptop door 15432 → container door 5432. |
-| **Volume** | Disk space Docker keeps for a container. Survives `docker compose down`. |
-| **psql** | Postgres's command-line tool for typing SQL. |
-| **Table / row / column** | Class / object / field, in database words. |
-| **Primary key (PK)** | The column that uniquely identifies each row. |
-| **Foreign key (FK)** | A column that must point at an existing row in another table. |
-| **Unique constraint** | A rule that no two rows can share a value (or a combination of values). |
-| **ER diagram** | A drawing of tables and the foreign keys between them. |
-| **Denormalisation** | Storing the same fact in two places on purpose — like `organization_id` on `flag`. |
+| Word                      | Meaning                                                                                         |
+| ------------------------- | ----------------------------------------------------------------------------------------------- |
+| **Database**              | A program that keeps data on disk and answers questions about it in SQL.                        |
+| **PostgreSQL / Postgres** | The database we use. Free, and used everywhere.                                                 |
+| **Docker image**          | A ready-made package of a program, like an installer.                                           |
+| **Container**             | A running copy of an image.                                                                     |
+| **Port**                  | A numbered door for reaching a program. `15432:5432` = laptop door 15432 → container door 5432. |
+| **Volume**                | Disk space Docker keeps for a container. Survives `docker compose down`.                        |
+| **psql**                  | Postgres's command-line tool for typing SQL.                                                    |
+| **Table / row / column**  | Class / object / field, in database words.                                                      |
+| **Primary key (PK)**      | The column that uniquely identifies each row.                                                   |
+| **Foreign key (FK)**      | A column that must point at an existing row in another table.                                   |
+| **Unique constraint**     | A rule that no two rows can share a value (or a combination of values).                         |
+| **ER diagram**            | A drawing of tables and the foreign keys between them.                                          |
+| **Denormalisation**       | Storing the same fact in two places on purpose — like `organization_id` on `flag`.              |
 
 ---
 
 ## If something goes wrong
 
-| You see | Fix |
-| --- | --- |
-| `Cannot connect to the Docker daemon` / `error during connect` | Docker Desktop isn't running. Open it and wait until it says it's running. |
-| `Ports are not available ... address already in use` | Something on your laptop already uses door 15432. Change `"15432:5432"` to `"25432:5432"` in `docker-compose.yml` and run `docker compose up -d` again. Remember your new number for session 3B. |
-| `no configuration file provided: not found` | You're not in the `infra` folder. `cd infra` first. |
-| `yaml: line N: ...` or `mapping values are not allowed` | An indentation mistake in `docker-compose.yml`. Use spaces, not tabs; copy the file again. |
-| `service "postgres" is not running` | Run `docker compose up -d` first. |
-| `the input device is not a TTY` (Windows, Git Bash) | Run the `psql` command from PowerShell instead, or put `winpty` in front of it. |
-| You press Enter and nothing happens; prompt shows `switchly-#` | psql is waiting for `;`. Type `;` and press Enter. |
-| `syntax error at or near "PASTE_ORG_ID"` / `invalid input syntax for type uuid` | You didn't replace the placeholder, or the quotes are missing. The id goes inside single quotes: `'a23a998c-...'`. |
-| `relation "organization" does not exist` | The table wasn't created. Run `\dt` to see what exists, then create it. Create tables in order: organization, project, flag. |
-| `relation "organization" already exists` | You created it already. That's fine — move on. |
-| `docker compose` isn't a docker command | Your Docker Desktop is old. Update it. |
-| Your data is gone after a restart | You ran `docker compose down -v`. The `-v` deletes the volume. Create the tables and rows again. |
+| You see                                                                         | Fix                                                                                                                                                                                              |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Cannot connect to the Docker daemon` / `error during connect`                  | Docker Desktop isn't running. Open it and wait until it says it's running.                                                                                                                       |
+| `Ports are not available ... address already in use`                            | Something on your laptop already uses door 15432. Change `"15432:5432"` to `"25432:5432"` in `docker-compose.yml` and run `docker compose up -d` again. Remember your new number for session 3B. |
+| `no configuration file provided: not found`                                     | You're not in the `infra` folder. `cd infra` first.                                                                                                                                              |
+| `yaml: line N: ...` or `mapping values are not allowed`                         | An indentation mistake in `docker-compose.yml`. Use spaces, not tabs; copy the file again.                                                                                                       |
+| `service "postgres" is not running`                                             | Run `docker compose up -d` first.                                                                                                                                                                |
+| `the input device is not a TTY` (Windows, Git Bash)                             | Run the `psql` command from PowerShell instead, or put `winpty` in front of it.                                                                                                                  |
+| You press Enter and nothing happens; prompt shows `switchly-#`                  | psql is waiting for `;`. Type `;` and press Enter.                                                                                                                                               |
+| `syntax error at or near "PASTE_ORG_ID"` / `invalid input syntax for type uuid` | You didn't replace the placeholder, or the quotes are missing. The id goes inside single quotes: `'a23a998c-...'`.                                                                               |
+| `relation "organization" does not exist`                                        | The table wasn't created. Run `\dt` to see what exists, then create it. Create tables in order: organization, project, flag.                                                                     |
+| `relation "organization" already exists`                                        | You created it already. That's fine — move on.                                                                                                                                                   |
+| `docker compose` isn't a docker command                                         | Your Docker Desktop is old. Update it.                                                                                                                                                           |
+| Your data is gone after a restart                                               | You ran `docker compose down -v`. The `-v` deletes the volume. Create the tables and rows again.                                                                                                 |
 
 ---
 
@@ -795,6 +797,7 @@ switchly/
     Swiggy       |        1 |     2
     Zomato       |        1 |     1
    ```
+
    </details>
 
 4. **Think, don't code.** Your session 2 code checks `existsByProjectIdAndKey` before saving a flag. The database now has `UNIQUE (project_id, key)`. Isn't one of them enough? Why keep both?

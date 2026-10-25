@@ -6,16 +6,17 @@ In session 3A you created tables by hand and typed the SQL yourself. Today your 
 
 **Same endpoints. Same `curl` commands. Same responses.** The only difference: stop the app, start it again, and your data is still there.
 
-|                                   | Session 2            | After today                          |
-| --------------------------------- | -------------------- | ------------------------------------ |
-| Where the data lives              | A `Map` in memory    | Postgres                             |
-| Who creates the tables            | —                    | **Flyway**, from a `.sql` file       |
-| Who writes the SQL to save and find | —                  | **Spring Data JPA**                  |
-| Your controllers and services     | —                    | **Unchanged**                        |
+|                                     | Session 2         | After today                    |
+| ----------------------------------- | ----------------- | ------------------------------ |
+| Where the data lives                | A `Map` in memory | Postgres                       |
+| Who creates the tables              | —                 | **Flyway**, from a `.sql` file |
+| Who writes the SQL to save and find | —                 | **Spring Data JPA**            |
+| Your controllers and services       | —                 | **Unchanged**                  |
 
 **Before you start:** your `api` code should match the end of [session 2](02-spring-boot-in-memory-api.md#your-final-structure), and you should have finished [session 3A](03A-postgres-in-docker.md).
 
 You'll use **two terminals** today:
+
 - **Terminal 1** — runs the app, inside the `api` folder.
 - **Terminal 2** — for `curl` and `psql`, inside the `infra` folder.
 
@@ -114,18 +115,19 @@ Open `api/pom.xml`. Find the `<dependencies>` section, and the `spring-boot-star
 		</dependency>
 ```
 
-| Dependency                      | What it gives you                                                                      |
-| ------------------------------- | -------------------------------------------------------------------------------------- |
-| `spring-boot-starter-data-jpa`  | **JPA** — saves Java objects into tables and reads them back. Explained in Step 9.     |
-| `spring-boot-starter-flyway`    | **Flyway** — runs your migration files when the app starts.                            |
-| `flyway-database-postgresql`    | Teaches Flyway how to talk to Postgres specifically.                                    |
-| `postgresql`                    | The **driver** — the small library Java uses to connect to Postgres.                   |
+| Dependency                     | What it gives you                                                                  |
+| ------------------------------ | ---------------------------------------------------------------------------------- |
+| `spring-boot-starter-data-jpa` | **JPA** — saves Java objects into tables and reads them back. Explained in Step 9. |
+| `spring-boot-starter-flyway`   | **Flyway** — runs your migration files when the app starts.                        |
+| `flyway-database-postgresql`   | Teaches Flyway how to talk to Postgres specifically.                               |
+| `postgresql`                   | The **driver** — the small library Java uses to connect to Postgres.               |
 
 No version numbers — Spring Boot picks versions that work together.
 
 > **Careful with older tutorials.** Many tutorials add only `flyway-core`. With Spring Boot 4 that's **not enough** — Flyway silently never runs. You need `spring-boot-starter-flyway`, exactly as above.
 
 **Tell your editor about the change:**
+
 - **IntelliJ:** a small Maven icon appears at the top right of `pom.xml` — click it (**Load Maven Changes**). Or open the **Maven** panel on the right and click the reload button.
 - **VS Code:** if it asks _"A build file was modified. Do you want to synchronize the Java classpath?"_, click **Yes** (or **Always**).
 
@@ -149,12 +151,12 @@ spring:
     open-in-view: false
 ```
 
-| Line | Meaning |
-| --- | --- |
-| `url: jdbc:postgresql://localhost:15432/switchly` | Connect to Postgres on **this laptop**, door **15432**, database **switchly**. The same door from your `docker-compose.yml`. |
-| `username` / `password` | The ones from your `docker-compose.yml`. |
-| `ddl-auto: validate` | JPA could create tables by itself. **We don't let it** — Flyway owns the tables. JPA only **checks** that your Java classes match them. You'll see this check in action in Step 13. |
-| `open-in-view: false` | Switches off a JPA feature we don't use. Without this line, Spring prints a warning every time it starts. |
+| Line                                              | Meaning                                                                                                                                                                             |
+| ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `url: jdbc:postgresql://localhost:15432/switchly` | Connect to Postgres on **this laptop**, door **15432**, database **switchly**. The same door from your `docker-compose.yml`.                                                        |
+| `username` / `password`                           | The ones from your `docker-compose.yml`.                                                                                                                                            |
+| `ddl-auto: validate`                              | JPA could create tables by itself. **We don't let it** — Flyway owns the tables. JPA only **checks** that your Java classes match them. You'll see this check in action in Step 13. |
+| `open-in-view: false`                             | Switches off a JPA feature we don't use. Without this line, Spring prints a warning every time it starts.                                                                           |
 
 > **Changed the port in session 3A?** If you used `25432` (or anything else) in `docker-compose.yml`, use the same number in this `url`.
 
@@ -181,12 +183,12 @@ V1__create_organization_project_flag.sql
 
 The name has four parts, and Flyway is strict about them:
 
-| Part | Meaning |
-| --- | --- |
-| `V1` | Version 1. The next migration will be `V2`, then `V3`. |
-| `__` | **Two** underscores. One underscore and Flyway silently ignores the file. |
-| `create_organization_project_flag` | A description, for humans. Underscores become spaces in Flyway's log. |
-| `.sql` | It's SQL. |
+| Part                               | Meaning                                                                   |
+| ---------------------------------- | ------------------------------------------------------------------------- |
+| `V1`                               | Version 1. The next migration will be `V2`, then `V3`.                    |
+| `__`                               | **Two** underscores. One underscore and Flyway silently ignores the file. |
+| `create_organization_project_flag` | A description, for humans. Underscores become spaces in Flyway's log.     |
+| `.sql`                             | It's SQL.                                                                 |
 
 Put this in the file — it's the **same SQL** you typed in session 3A, Step 8:
 
@@ -422,12 +424,12 @@ public class Organization {
 
 What's new:
 
-| Code | Meaning |
-| --- | --- |
-| `@Entity` | "Objects of this class are saved in a table." |
-| `@Table(name = "organization")` | "…in the table called `organization`." |
-| `@Id` | "This field is the primary key." |
-| `@Column(name = "name")` | "This field is stored in the column called `name`." |
+| Code                            | Meaning                                             |
+| ------------------------------- | --------------------------------------------------- |
+| `@Entity`                       | "Objects of this class are saved in a table."       |
+| `@Table(name = "organization")` | "…in the table called `organization`."              |
+| `@Id`                           | "This field is the primary key."                    |
+| `@Column(name = "name")`        | "This field is stored in the column called `name`." |
 
 And two changes you might not notice:
 
@@ -702,11 +704,11 @@ So far, Spring has been writing SQL behind your back. Let's make it show us.
 In `application.yaml`, add `show-sql: true` under `jpa`:
 
 ```yaml
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    open-in-view: false
-    show-sql: true
+jpa:
+  hibernate:
+    ddl-auto: validate
+  open-in-view: false
+  show-sql: true
 ```
 
 Keep the indentation: `show-sql` lines up with `open-in-view`.
@@ -734,12 +736,12 @@ Hibernate: insert into flag (enabled,key,name,organization_id,project_id,id) val
 
 Read them one by one, against `FlagService.create` from session 2:
 
-| Line | Comes from | |
-| --- | --- | --- |
-| 1 | `projectService.getById(projectId)` | Does the project exist? (→ 404 if not) |
-| 2 | `existsByProjectIdAndKey(projectId, key)` | **The SQL Spring wrote from your method name.** (→ 409 if a row is found) |
-| 3 | `flagRepository.save(flag)` | Explained below. |
-| 4 | `flagRepository.save(flag)` | The actual `INSERT`. |
+| Line | Comes from                                |                                                                           |
+| ---- | ----------------------------------------- | ------------------------------------------------------------------------- |
+| 1    | `projectService.getById(projectId)`       | Does the project exist? (→ 404 if not)                                    |
+| 2    | `existsByProjectIdAndKey(projectId, key)` | **The SQL Spring wrote from your method name.** (→ 409 if a row is found) |
+| 3    | `flagRepository.save(flag)`               | Explained below.                                                          |
+| 4    | `flagRepository.save(flag)`               | The actual `INSERT`.                                                      |
 
 A few things to notice:
 
@@ -863,12 +865,12 @@ Rows **your API** wrote.
 
 ## Step 15 — What changed, and what didn't
 
-| | Files |
-| --- | --- |
-| **Changed** | `pom.xml`, `application.yaml`, the 3 models, the 3 repository interfaces |
-| **New** | `db/migration/V1__create_organization_project_flag.sql` (and `infra/docker-compose.yml` from 3A) |
-| **Deleted** | The 3 `InMemory…Repository` classes |
-| **Unchanged** | **Every controller. Every service. Every DTO. Every exception.** |
+|               | Files                                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------------ |
+| **Changed**   | `pom.xml`, `application.yaml`, the 3 models, the 3 repository interfaces                         |
+| **New**       | `db/migration/V1__create_organization_project_flag.sql` (and `infra/docker-compose.yml` from 3A) |
+| **Deleted**   | The 3 `InMemory…Repository` classes                                                              |
+| **Unchanged** | **Every controller. Every service. Every DTO. Every exception.**                                 |
 
 At the end of session 2 we said:
 
@@ -930,39 +932,39 @@ switchly/
 
 ## New words
 
-| Word | Meaning |
-| --- | --- |
-| **Migration** | One `.sql` file that changes the database. Numbered, run once, in order, never edited after it runs. |
-| **Flyway** | The tool that runs migrations when the app starts, and remembers which ones it ran. |
-| **Checksum** | A fingerprint of a file's contents. Flyway uses it to notice edited migrations. |
-| **Driver** | The small library Java uses to connect to a specific database. |
-| **JPA** | The standard Java way to save objects into tables and read them back. |
-| **Hibernate** | The library that does JPA's work underneath. Its name appears in your logs. |
-| **Entity** | A class marked `@Entity` — its objects are rows in a table. |
-| **Spring Data JPA** | Writes the code behind your repository interfaces — including SQL from method names like `findByProjectId`. |
-| **`ddl-auto: validate`** | At startup, check every entity against the real tables. Never create or change tables. |
+| Word                     | Meaning                                                                                                     |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| **Migration**            | One `.sql` file that changes the database. Numbered, run once, in order, never edited after it runs.        |
+| **Flyway**               | The tool that runs migrations when the app starts, and remembers which ones it ran.                         |
+| **Checksum**             | A fingerprint of a file's contents. Flyway uses it to notice edited migrations.                             |
+| **Driver**               | The small library Java uses to connect to a specific database.                                              |
+| **JPA**                  | The standard Java way to save objects into tables and read them back.                                       |
+| **Hibernate**            | The library that does JPA's work underneath. Its name appears in your logs.                                 |
+| **Entity**               | A class marked `@Entity` — its objects are rows in a table.                                                 |
+| **Spring Data JPA**      | Writes the code behind your repository interfaces — including SQL from method names like `findByProjectId`. |
+| **`ddl-auto: validate`** | At startup, check every entity against the real tables. Never create or change tables.                      |
 
 ---
 
 ## If something goes wrong
 
-| You see | Fix |
-| --- | --- |
-| `Connection to localhost:15432 refused` | Postgres isn't running. In `infra`: `docker compose up -d`. Also check Docker Desktop is open. |
-| `password authentication failed for user "switchly"` or `role "switchly" does not exist` | Your `url` has the wrong port — you reached a **different** Postgres (probably one installed on your laptop). The port in `application.yaml` must match the left number in `docker-compose.yml`. |
-| `Found non-empty schema(s) "public" but no schema history table` | You didn't drop the hand-made tables from session 3A. Do Step 1, then start the app again. |
-| `Schema validation: missing table [flag]`, and the log says `1 SQL migrations were detected but not run because they did not follow the filename convention` | The migration file name is wrong. It must be `V1__…sql` — capital `V`, **two** underscores. Then run `./mvnw clean` and start again (the old wrong file may still be in `target`). |
-| `Schema validation: missing table [flag]`, and **no** lines from Flyway in the log at all | Flyway isn't running. Check you added `spring-boot-starter-flyway` (not only `flyway-core`), and that the file is in `src/main/resources/db/migration/` — check every folder name. |
-| `Schema validation: missing column [...] in table [...]` | An `@Column(name = "...")` doesn't match the column in your migration. Compare them letter by letter. |
-| `Migration checksum mismatch for migration version 1` | You edited V1 after it ran. Undo your edit exactly. (If you really can't get it back, see the note below.) |
-| `Not a managed type: class live.switchly.api.model.…` | You forgot `@Entity` on that class. |
-| `No property 'remove' found for type 'Flag'` (or another name) | A repository interface still has a method Spring can't turn into SQL — often left over from the session 2 homework. Delete it, and use what `JpaRepository` already has, like `deleteById`. |
-| `variable id might not have been initialized` | A field is still `final`. Remove `final` from the fields of your entities. |
-| The app starts, but a request returns **500**, and the log says `No default constructor for entity` | You forgot the empty `protected …() {}` constructor in that entity. |
-| `cannot find symbol: class Entity` / `package jakarta.persistence does not exist` | The new dependencies aren't loaded. Reload Maven in your editor (Step 3), or run from the terminal with `./mvnw spring-boot:run`. |
-| `cannot drop table organization because other objects depend on it` | Drop the tables in order: `flag`, then `project`, then `organization`. |
-| A `WARN` about `spring.jpa.open-in-view` when the app starts | You missed `open-in-view: false` in `application.yaml`. Harmless, but add it. |
-| `./mvnw test` fails with `Connection … refused` | Start Postgres first (Step 16). |
+| You see                                                                                                                                                      | Fix                                                                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Connection to localhost:15432 refused`                                                                                                                      | Postgres isn't running. In `infra`: `docker compose up -d`. Also check Docker Desktop is open.                                                                                                   |
+| `password authentication failed for user "switchly"` or `role "switchly" does not exist`                                                                     | Your `url` has the wrong port — you reached a **different** Postgres (probably one installed on your laptop). The port in `application.yaml` must match the left number in `docker-compose.yml`. |
+| `Found non-empty schema(s) "public" but no schema history table`                                                                                             | You didn't drop the hand-made tables from session 3A. Do Step 1, then start the app again.                                                                                                       |
+| `Schema validation: missing table [flag]`, and the log says `1 SQL migrations were detected but not run because they did not follow the filename convention` | The migration file name is wrong. It must be `V1__…sql` — capital `V`, **two** underscores. Then run `./mvnw clean` and start again (the old wrong file may still be in `target`).               |
+| `Schema validation: missing table [flag]`, and **no** lines from Flyway in the log at all                                                                    | Flyway isn't running. Check you added `spring-boot-starter-flyway` (not only `flyway-core`), and that the file is in `src/main/resources/db/migration/` — check every folder name.               |
+| `Schema validation: missing column [...] in table [...]`                                                                                                     | An `@Column(name = "...")` doesn't match the column in your migration. Compare them letter by letter.                                                                                            |
+| `Migration checksum mismatch for migration version 1`                                                                                                        | You edited V1 after it ran. Undo your edit exactly. (If you really can't get it back, see the note below.)                                                                                       |
+| `Not a managed type: class live.switchly.api.model.…`                                                                                                        | You forgot `@Entity` on that class.                                                                                                                                                              |
+| `No property 'remove' found for type 'Flag'` (or another name)                                                                                               | A repository interface still has a method Spring can't turn into SQL — often left over from the session 2 homework. Delete it, and use what `JpaRepository` already has, like `deleteById`.      |
+| `variable id might not have been initialized`                                                                                                                | A field is still `final`. Remove `final` from the fields of your entities.                                                                                                                       |
+| The app starts, but a request returns **500**, and the log says `No default constructor for entity`                                                          | You forgot the empty `protected …() {}` constructor in that entity.                                                                                                                              |
+| `cannot find symbol: class Entity` / `package jakarta.persistence does not exist`                                                                            | The new dependencies aren't loaded. Reload Maven in your editor (Step 3), or run from the terminal with `./mvnw spring-boot:run`.                                                                |
+| `cannot drop table organization because other objects depend on it`                                                                                          | Drop the tables in order: `flag`, then `project`, then `organization`.                                                                                                                           |
+| A `WARN` about `spring.jpa.open-in-view` when the app starts                                                                                                 | You missed `open-in-view: false` in `application.yaml`. Harmless, but add it.                                                                                                                    |
+| `./mvnw test` fails with `Connection … refused`                                                                                                              | Start Postgres first (Step 16).                                                                                                                                                                  |
 
 > **Totally stuck with your database?** On your laptop, you can always start from zero: stop the app, then in `infra` run `docker compose down -v` and `docker compose up -d`. That **deletes all your data**. Start the app, and Flyway builds every table again from your migration files. (This is exactly why the migration files matter — they can rebuild the database from nothing.) **Never do this on a real server.**
 
